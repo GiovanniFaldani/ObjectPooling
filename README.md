@@ -1,2 +1,2 @@
-# ObjectPooling
-Object pooling test project in Unreal Engine 5.6
+# ObjectPoolingUE5
+Simple implementation of Object pooling in ue5
