@@ -8,6 +8,20 @@
 #include "Components/SphereComponent.h"
 #include "Confetti.generated.h"
 
+UENUM(BlueprintType)
+enum class EConfettiColor : uint8
+{
+	Red			UMETA(DisplayName = "Red"),
+	Blue		UMETA(DisplayName = "Blue"),
+	Green		UMETA(DisplayName = "Green"),
+	Yellow		UMETA(DisplayName = "Yellow"),
+	Purple		UMETA(DisplayName = "Purple"),
+	Orange		UMETA(DisplayName = "Orange"),
+	Pink		UMETA(DisplayName = "Pink"),
+	White		UMETA(DisplayName = "White"),
+	Length		UMETA(Hidden)
+};
+
 UCLASS()
 class OBJECTPOOLING_API AConfetti : public APoolActorBase
 {
@@ -18,6 +32,9 @@ public:
 	AConfetti();
 
 protected:
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Confetti")
+	float lifeTime;
+
 	// Confetti mesh
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Confetti")
 	UStaticMeshComponent* MeshComponent;
@@ -25,6 +42,8 @@ protected:
 	// Confetti collision
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Confetti")
 	USphereComponent* CollisionComponent;
+
+	float lifeTimer;
 
 protected:
 	// Called when the game starts or when spawned
@@ -34,4 +53,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+
+	virtual void NativeActivate(FObjectPoolActivationData ObjectPoolData) override;
+
+	virtual void NativeDeactivate() override;
 };

@@ -49,7 +49,7 @@ public:
 	void Activate(FObjectPoolActivationData ObjectPoolData) { NativeActivate(ObjectPoolData); };
 
 	//Deactive version to call in c++
-	void Deactivate() { NativeDeactive(); }
+	void Deactivate() { NativeDeactivate(); }
 
 	// Functions to implement
 
@@ -68,12 +68,12 @@ public:
 		}		
 	};
 
-	// Deactive to implement in blueprint
+	// Deactivate to implement in blueprint
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Object Pool Interface")
 	void BP_Deactivate();
 
-	// Deactive to implemente in c++
-	virtual void NativeDeactive()
+	// Deactivate to implement in c++
+	virtual void NativeDeactivate()
 	{
 		UObject* Object = Cast<UObject>(this);
 

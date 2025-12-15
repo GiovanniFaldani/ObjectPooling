@@ -2,6 +2,8 @@
 
 
 #include "Confetti.h"
+#include "../ObjectPoolSubsystem.h"
+
 
 // Sets default values
 AConfetti::AConfetti()
@@ -38,8 +40,6 @@ void AConfetti::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Set random color here
-	
 }
 
 // Called every frame
@@ -47,5 +47,58 @@ void AConfetti::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (lifeTimer > 0.f) {
+		lifeTimer -= DeltaTime;
+		if (lifeTimer <= 0.f)
+		{
+			// Return to pool
+			Deactivate();
+		}
+	}
+}
+
+void AConfetti::NativeActivate(FObjectPoolActivationData ObjectPoolData)
+{
+	Super::NativeActivate(ObjectPoolData);
+	lifeTimer = lifeTime;
+	this->SetActorTransform(ObjectPoolData.ObjectPoolTransform);
+
+	// Set random color
+	EConfettiColor RandomColor = static_cast<EConfettiColor>(FMath::RandRange(0, (int)EConfettiColor::Length));
+	switch (RandomColor) {
+	case EConfettiColor::Red:
+		MeshComponent->SetMaterial(0, LoadObject<UMaterialInterface>(nullptr, TEXT("Material'/Game/ObjectPoolingSystem/Materials/MaterialInstances/MI_Red.MI_Red'")));
+		break;
+	case EConfettiColor::Blue:
+		MeshComponent->SetMaterial(0, LoadObject<UMaterialInterface>(nullptr, TEXT("Material'/Game/ObjectPoolingSystem/Materials/MaterialInstances/MI_Blue.MI_Blue'")));
+		break;
+	case EConfettiColor::Green:
+		MeshComponent->SetMaterial(0, LoadObject<UMaterialInterface>(nullptr, TEXT("Material'/Game/ObjectPoolingSystem/Materials/MaterialInstances/MI_Green.MI_Green'")));
+		break;
+	case EConfettiColor::Yellow:
+		MeshComponent->SetMaterial(0, LoadObject<UMaterialInterface>(nullptr, TEXT("Material'/Game/ObjectPoolingSystem/Materials/MaterialInstances/MI_Yellow.MI_Yellow'")));
+		break;
+	case EConfettiColor::Purple:
+		MeshComponent->SetMaterial(0, LoadObject<UMaterialInterface>(nullptr, TEXT("Material'/Game/ObjectPoolingSystem/Materials/MaterialInstances/MI_Purple.MI_Purple'")));
+		break;
+	case EConfettiColor::Orange:
+		MeshComponent->SetMaterial(0, LoadObject<UMaterialInterface>(nullptr, TEXT("Material'/Game/ObjectPoolingSystem/Materials/MaterialInstances/MI_Orange.MI_Orange'")));
+		break;
+	case EConfettiColor::Pink:
+		MeshComponent->SetMaterial(0, LoadObject<UMaterialInterface>(nullptr, TEXT("Material'/Game/ObjectPoolingSystem/Materials/MaterialInstances/MI_Pink.MI_Pink'")));
+		break;
+	case EConfettiColor::White:
+		MeshComponent->SetMaterial(0, LoadObject<UMaterialInterface>(nullptr, TEXT("Material'/Game/ObjectPoolingSystem/Materials/MaterialInstances/MI_White.MI_White'")));
+		break;
+	}
+}
+
+void AConfetti::NativeDeactivate()
+{
+	Super::NativeDeactivate();
+	if (!GetWorld()) return;
+	UObjectPoolSubsystem* MySubsystem = GetWorld()->GetSubsystem<UObjectPoolSubsystem>();
+	if (!MySubsystem) return;
+	MySubsystem->ReturnObjectToPool(AConfetti::StaticClass(), TScriptInterface<IObjectPoolInterface>(this));
 }
 
