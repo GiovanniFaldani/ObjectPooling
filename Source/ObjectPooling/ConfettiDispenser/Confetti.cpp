@@ -53,6 +53,7 @@ void AConfetti::Tick(float DeltaTime)
 		{
 			// Return to pool
 			Deactivate();
+			UE_LOGFMT(LogTemp, Display, "Deactivating object...");
 		}
 	}
 }
@@ -91,6 +92,8 @@ void AConfetti::NativeActivate(FObjectPoolActivationData ObjectPoolData)
 		MeshComponent->SetMaterial(0, LoadObject<UMaterialInterface>(nullptr, TEXT("Material'/Game/ObjectPoolingSystem/Materials/MaterialInstances/MI_White.MI_White'")));
 		break;
 	}
+
+	UE_LOGFMT(LogTemp, Display, "Added to pool `{Guid}`", GetActorGuid());
 }
 
 void AConfetti::NativeDeactivate()
@@ -100,5 +103,6 @@ void AConfetti::NativeDeactivate()
 	UObjectPoolSubsystem* MySubsystem = GetWorld()->GetSubsystem<UObjectPoolSubsystem>();
 	if (!MySubsystem) return;
 	MySubsystem->ReturnObjectToPool(AConfetti::StaticClass(), TScriptInterface<IObjectPoolInterface>(this));
+	UE_LOGFMT(LogTemp, Display, "Returned to pool `{Guid}`", GetActorGuid());
 }
 

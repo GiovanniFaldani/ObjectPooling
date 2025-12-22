@@ -59,6 +59,7 @@ void AConfettiDispenser::Tick(float DeltaTime)
 					FObjectPoolActivationData ActivationData;
 					ActivationData.ObjectPoolTransform = FTransform(FRotator::ZeroRotator, SpawnLocation, FVector(1.f, 1.f, 1.f));
 					ConfettiActorInterface->Activate(ActivationData);
+					UE_LOGFMT(LogTemp, Display, "Activated a confetto from pool");
 				}
 			}
 			// Reset timer
